@@ -1,104 +1,30 @@
-// import Link from "next/link";
-// import RemoveBtn from "./Remove.Btn";
-// import { HiPencilAlt } from "react-icons/hi";
-
-
-// const getTopics = async () => {
-//   try {
-//     const res = await fetch("/api/topics", {
-//       cache: "no-store",
-
-//     });
-//     if (!res.ok) {
-//       throw new Error("Failed to fetch topics");
-
-//     }
-//     return res.json();
-
-//   } catch (err) {
-
-//     console.log("Error Loading topics", err);
-//     return { topics: [] };
-
-//   }
-// }
-
-
-// export default async function TopicsList() {
-//   const { topics } = await getTopics();
-
-//   return (
-//     <>
-//       {
-//         topics.map((t) => (
-//           <div key={t._id} className="flex justify-between gap-5
-//      p-4 border border-slate-300 my-3">
-//             {/* 1 */}
-//             <div>
-//               <h1 className="font-bold text-2xl sm:text-3xl ">{t.title}</h1>
-//               <h3 className="text-lg sm:text-xl"> {t.description}</h3>
-//             </div>
-
-//             {/* 2 */}
-//             <div className="flex items-center gap-2 ">
-//               <RemoveBtn id={t._id} />
-
-
-//               <Link href={`/edit-topic/${t._id}`}>
-//                 <HiPencilAlt size={24} />
-//               </Link>  
-//             </div>
-
-//           </div>
-//         ))
-
-//       }
-
-
-
-
-//     </>
-//   )
-// }
-
 import Link from "next/link";
 import RemoveBtn from "./RemoveBtn";
 import { HiPencilAlt } from "react-icons/hi";
 
-const getTopics = async () => {
-  try {
-    const apiUrl = process.env.VERCEL_URL ? "https://" + process.env.VERCEL_URL + "/api/topics" : "http://localhost:3000/api/topics";
-    const res = await fetch(apiUrl, {
-      cache: "no-store",
-    });
-    if (!res.ok) {
-      throw new Error("Failed to fetch topics");
-    }
-    return res.json();
-  } catch (err) {
-    console.log("Error Loading topics", err);
-    return { topics: [] };
-  }
-};
-
-export default async function TopicsList() {
-  const { topics } = await getTopics();
+export default function TopicsList({ topics }) {
   return (
     <>
       {topics.map((t) => (
-        <div key={t._id} className="flex justify-between gap-5 p-4 border border-slate-300 my-3">
+        <div
+          key={t._id}
+          className="p-4 border border-slate-300 my-3 flex justify-between gap-5 items-start"
+        >
           <div>
-            <h1 className="font-bold text-2xl sm:text-3xl">{t.title}</h1>
-            <h3 className="text-lg sm:text-xl">{t.description}</h3>
+            <h2 className="font-bold text-2xl">{t.title}</h2>
+            <div>{t.description}</div>
           </div>
-          <div className="flex items-center gap-2">
+
+          <div className="flex gap-2">
             <RemoveBtn id={t._id} />
-            <Link href={`/edit-topic/${t._id}`}>
+            <Link href={`/editTopic/${t._id}`}>
               <HiPencilAlt size={24} />
             </Link>
           </div>
         </div>
       ))}
+
+      {topics.length === 0 && <p>No topics found.</p>}
     </>
   );
 }
